@@ -1,0 +1,26 @@
+.root {
+  background-color: var(--c-white);
+  color: var(--c-black);
+
+  width: 52px;
+  height: 48px;
+  border-radius: var(--l-common-border-radius);
+  border: 1px solid var(--c-gray1);
+}
+
+.width-2 {
+  width: 72px;
+}
+
+.width-3 {
+  width: 152px;
+}
+
+.large {
+  background-color: var(--c-primary);
+  color: var(--c-white);
+
+  height: 64px;
+  width: var(--l-canvas-content-width);
+  border-width: 0;
+}

@@ -1,0 +1,10 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  width: var(--l-canvas-content-width);
+  gap: 8px;
+}
+
+.reverse {
+  flex-direction: row-reverse;
+}

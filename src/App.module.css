@@ -1,0 +1,12 @@
+.root {
+  display: flex;
+  gap: 56px;
+  justify-content: center;
+
+  width: 800px;
+  margin: auto;
+  margin-top: 48px;
+  padding: 48px;
+
+  background-color: var(--c-white);
+}
