@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import classes from './Button.module.css'
 import classes2 from './ButtonBlock.module.css'
 import Draggable from '../Draggable'
+import { DRAG_TYPE, DragItem } from 'common'
 
 export type ButtonProps = {
   children?: string
@@ -29,27 +30,6 @@ const Button: FC<ButtonProps> = forwardRef<HTMLButtonElement, ButtonProps>(
 
 export type DraggableProps = {}
 
-/* const DRAG_TYPE = 'BLOCK' */
-
-/* export const DraggableButton: React.FC<ButtonProps> = ({ children }) => {
-  const [collected, dragSource, dragPreview] = useDrag(
-    () => ({
-      type: DRAG_TYPE,
-      collect: monitor => ({
-        //this will be injected in some component
-        isDragging: !!monitor.isDragging(),
-      }),
-    }),
-    []
-  )
-
-  if (collected.isDragging) {
-    return <div ref={dragPreview}>{children}</div>
-  }
-
-  return <div ref={dragSource}>{children}</div>
-} */
-
 export default Button
 
 type EqualButtonProps = Pick<ButtonProps, 'disabled'>
@@ -62,7 +42,9 @@ export const EqualButton = forwardRef<HTMLButtonElement, EqualButtonProps>(
   )
 )
 
-export const DraggableEqualButton = Draggable(EqualButton)
+export const DraggableEqualButton = Draggable<DragItem>(DRAG_TYPE, {
+  dragBlock: 'equal',
+})(EqualButton)
 
 export const OperationsBlock = forwardRef<HTMLDivElement>((props, ref) => {
   const ops = ['/', 'x', '-', '+']
@@ -75,7 +57,9 @@ export const OperationsBlock = forwardRef<HTMLDivElement>((props, ref) => {
     </div>
   )
 })
-export const DraggableOperationsBlock = Draggable(OperationsBlock)
+export const DraggableOperationsBlock = Draggable<DragItem>(DRAG_TYPE, {
+  dragBlock: 'operations',
+})(OperationsBlock)
 
 export const DigitsBlock = forwardRef<HTMLDivElement>((props, ref) => {
   const digits = Array(9)
@@ -93,4 +77,6 @@ export const DigitsBlock = forwardRef<HTMLDivElement>((props, ref) => {
     </div>
   )
 })
-export const DraggableDigitsBlock = Draggable(DigitsBlock)
+export const DraggableDigitsBlock = Draggable<DragItem>(DRAG_TYPE, {
+  dragBlock: 'digits',
+})(DigitsBlock)

@@ -2,18 +2,16 @@ import { useReducer, Reducer } from 'react'
 import { useDrop } from 'react-dnd'
 
 import classes from './Canvas.module.css'
-import { DRAG_TYPE } from './Draggable'
+import { DRAG_TYPE, DragBlock, DragItem } from 'common'
 import Button, { EqualButton, OperationsBlock, DigitsBlock } from './controls/Button'
 
 export type CanvasProps = {
   content?: string
 }
 
-type Block = 'operations' | 'digits' | 'equal'
-
 type State = {
   nextPos: number
-  blockPos: Record<Block, number | null>
+  blockPos: Record<DragBlock, number | null>
 }
 
 const initialState: State = {
@@ -28,11 +26,11 @@ const initialState: State = {
 type Action =
   | {
       type: 'drop'
-      payload: Block
+      payload: DragItem
     }
   | {
       type: 'return'
-      payload: Block
+      payload: DragItem
     }
 
 export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
@@ -42,7 +40,7 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
         ...state,
         blockPos: {
           ...state.blockPos,
-          [payload]: state.nextPos + 1,
+          [payload.dragBlock]: state.nextPos + 1,
         },
         nextPos: state.nextPos + 1,
       }
@@ -52,7 +50,7 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
         ...state,
         blockPos: {
           ...state.blockPos,
-          [payload]: null,
+          [payload.dragBlock]: null,
         },
         nextPos: state.nextPos - 1,
       }
@@ -63,22 +61,18 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
 const Canvas: React.FC<CanvasProps> = ({ content = '' }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { blockPos } = state
-  /* const [{ isOver, canDrop }, drop] = useDrop( */
-  /*   () => ({ */
-  /*     accept: DRAG_TYPE, */
-  /*     //called when item dropped */
-  /*     //what we dropped and where? */
-  /*     drop: () => game.moveKnight(x, y), */
-  /*     collect: monitor => ({ */
-  /*       isOver: !!monitor.isOver(), */
-  /*       canDrop: !!monitor.canDrop(), */
-  /*     }), */
-  /*   }), */
-  /*   [game] */
-  /* ) */
+  const [collected, dropTarget] = useDrop(
+    () => ({
+      accept: DRAG_TYPE,
+      drop: (item: DragItem) => {
+        dispatch({ type: 'drop', payload: item })
+      },
+    }),
+    []
+  )
 
   return (
-    <div className={classes.root}>
+    <div ref={dropTarget} className={classes.root}>
       {blockPos.operations && (
         <div className={classes[`order-${blockPos.operations}`]}>
           <OperationsBlock />

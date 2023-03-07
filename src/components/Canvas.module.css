@@ -4,8 +4,10 @@
 
   width: var(--l-canvas-width);
   height: var(--l-canvas-height);
+  border: 2px dashed var(--c-gray0);
 
   background-color: #fff;
+  border-radius: var(--l-common-border-radius);
 }
 
 .order-1 {
