@@ -2,7 +2,7 @@ import { useReducer, Reducer } from 'react'
 import { useDrop } from 'react-dnd'
 
 import classes from './Canvas.module.css'
-import { DRAG_TYPE, DragBlock, DragItem } from 'common'
+import { DRAG_TYPE, DragBlockName, DragItem } from 'common'
 import Button, { EqualButton, OperationsBlock, DigitsBlock } from './controls/Button'
 
 export type CanvasProps = {
@@ -11,7 +11,7 @@ export type CanvasProps = {
 
 type State = {
   nextPos: number
-  blockPos: Record<DragBlock, number | null>
+  blockPos: Record<DragBlockName, number | null>
 }
 
 const initialState: State = {
@@ -40,7 +40,7 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
         ...state,
         blockPos: {
           ...state.blockPos,
-          [payload.dragBlock]: state.nextPos + 1,
+          [payload.dragBlockName]: state.nextPos + 1,
         },
         nextPos: state.nextPos + 1,
       }
@@ -50,7 +50,7 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
         ...state,
         blockPos: {
           ...state.blockPos,
-          [payload.dragBlock]: null,
+          [payload.dragBlockName]: null,
         },
         nextPos: state.nextPos - 1,
       }
@@ -67,6 +67,10 @@ const Canvas: React.FC<CanvasProps> = ({ content = '' }) => {
       drop: (item: DragItem) => {
         dispatch({ type: 'drop', payload: item })
       },
+      collect: monitor => ({
+        /* isOver: monitor.isOver(), */
+        /* canDrop: monitor.canDrop(), */
+      }),
     }),
     []
   )

@@ -18,6 +18,7 @@ const Button: FC<ButtonProps> = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, extraClasses = [], ...rest }, ref) => {
     return (
       <button
+        disabled
         {...rest}
         className={clsx(classes.root, ...[extraClasses].flat().map(key => classes[key]))}
         ref={ref}
@@ -43,7 +44,7 @@ export const EqualButton = forwardRef<HTMLButtonElement, EqualButtonProps>(
 )
 
 export const DraggableEqualButton = Draggable<DragItem>(DRAG_TYPE, {
-  dragBlock: 'equal',
+  dragBlockName: 'equal',
 })(EqualButton)
 
 export const OperationsBlock = forwardRef<HTMLDivElement>((props, ref) => {
@@ -58,7 +59,7 @@ export const OperationsBlock = forwardRef<HTMLDivElement>((props, ref) => {
   )
 })
 export const DraggableOperationsBlock = Draggable<DragItem>(DRAG_TYPE, {
-  dragBlock: 'operations',
+  dragBlockName: 'operations',
 })(OperationsBlock)
 
 export const DigitsBlock = forwardRef<HTMLDivElement>((props, ref) => {
@@ -78,5 +79,5 @@ export const DigitsBlock = forwardRef<HTMLDivElement>((props, ref) => {
   )
 })
 export const DraggableDigitsBlock = Draggable<DragItem>(DRAG_TYPE, {
-  dragBlock: 'digits',
+  dragBlockName: 'digits',
 })(DigitsBlock)

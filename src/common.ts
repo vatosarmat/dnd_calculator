@@ -1,3 +1,3 @@
 export const DRAG_TYPE = 'BLOCK'
-export type DragBlock = 'operations' | 'digits' | 'equal'
-export type DragItem = { dragBlock: DragBlock }
+export type DragBlockName = 'operations' | 'digits' | 'equal'
+export type DragItem = { dragBlockName: DragBlockName }
