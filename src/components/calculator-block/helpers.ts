@@ -1,10 +1,10 @@
 import type { FC } from 'react'
+
 import EqualButton from './blocks/EqualButton'
 import ButtonBlock from './blocks/ButtonsBlock'
+import type { CalculatorBlockName } from 'state'
 
 export const DRAG_TYPE = 'CALCULATOR_BLOCK'
-export const calculatorBlockNameValues = ['operations', 'digits', 'equal'] as const
-export type CalculatorBlockName = typeof calculatorBlockNameValues[number]
 export type DragItem = { calculatorBlockName: CalculatorBlockName }
 
 export type CalculatorBlockContentProps = {

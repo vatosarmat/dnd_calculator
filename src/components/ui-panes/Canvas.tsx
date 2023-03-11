@@ -1,13 +1,9 @@
-import { useReducer, Reducer } from 'react'
+import { useReducer, Reducer, useContext } from 'react'
 import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
 
-import {
-  CalculatorBlock,
-  CalculatorBlockName,
-  DragItem,
-  DRAG_TYPE,
-} from 'components/calculator-block'
+import { CalculatorBlock, DragItem, DRAG_TYPE } from 'components/calculator-block'
+import { CalculatorBlockName, DispatchContext } from 'state'
 
 const StyledBlock = styled.div`
   display: flex;
@@ -19,67 +15,49 @@ const StyledBlock = styled.div`
   border-radius: ${({ theme: { decoration } }) => decoration.buttonBorderRadius};
 `
 
-const Item = styled.div<{ order: number }>`
-  order: ${({ order }) => order};
+const Item = styled.div<{ $order: number }>`
+  order: ${({ $order }) => $order};
 `
 
-type State = {
-  nextPos: number
-  blockPos: Record<CalculatorBlockName, number | null>
-}
+type State = CalculatorBlockName[]
 
-const initialState: State = {
-  nextPos: 1,
-  blockPos: {
-    operations: null,
-    digits: null,
-    equal: null,
-  },
-}
+const initialState: State = []
 
 type Action =
   | {
       type: 'drop'
-      payload: DragItem
+      payload: CalculatorBlockName
     }
   | {
       type: 'return'
-      payload: DragItem
+      payload: CalculatorBlockName
     }
 
 export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
   switch (type) {
     case 'drop': {
-      return {
-        ...state,
-        blockPos: {
-          ...state.blockPos,
-          [payload.calculatorBlockName]: state.nextPos + 1,
-        },
-        nextPos: state.nextPos + 1,
-      }
+      return [...state, payload]
     }
     case 'return': {
-      return {
-        ...state,
-        blockPos: {
-          ...state.blockPos,
-          [payload.calculatorBlockName]: null,
-        },
-        nextPos: state.nextPos - 1,
-      }
+      return state.filter(block => block !== payload)
     }
   }
 }
 
 const Canvas: React.FC = () => {
-  const [state, dispatch] = useReducer(reducer, initialState)
-  const { blockPos } = state
+  const dispatch = useContext(DispatchContext)
+  const [blocks, localDispatch] = useReducer(reducer, initialState)
   const [, dropTarget] = useDrop<DragItem>(
     () => ({
       accept: DRAG_TYPE,
       drop: (item: DragItem) => {
-        dispatch({ type: 'drop', payload: item })
+        localDispatch({ type: 'drop', payload: item.calculatorBlockName })
+        dispatch({
+          type: 'drop',
+          payload: {
+            blockName: item.calculatorBlockName,
+          },
+        })
       },
       collect: monitor => ({
         /* isOver: monitor.isOver(), */
@@ -89,16 +67,18 @@ const Canvas: React.FC = () => {
     []
   )
 
+  const onDoubleClick = (blockName: CalculatorBlockName) => {
+    localDispatch({ type: 'return', payload: blockName })
+    dispatch({ type: 'return', payload: { blockName } })
+  }
+
   return (
     <StyledBlock ref={dropTarget}>
-      {(['operations', 'digits', 'equal'] as const).map(blockName => {
-        const pos = blockPos[blockName]
+      {blocks.map((blockName, pos) => {
         return (
-          pos && (
-            <Item key={blockName} order={pos}>
-              <CalculatorBlock disabled content={blockName} />
-            </Item>
-          )
+          <Item key={blockName} $order={pos + 1}>
+            <CalculatorBlock disabled content={blockName} onDoubleClick={onDoubleClick} />
+          </Item>
         )
       })}
     </StyledBlock>

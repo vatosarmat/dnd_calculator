@@ -4,13 +4,8 @@ import { getEmptyImage } from 'react-dnd-html5-backend'
 import styled, { css } from 'styled-components'
 
 import { StyledTransient, styledTransient } from 'utils'
-
-import {
-  DRAG_TYPE,
-  getCalculatorBlockComponent,
-  CalculatorBlockName,
-  DragItem,
-} from './helpers'
+import { DRAG_TYPE, getCalculatorBlockComponent, DragItem } from './helpers'
+import { CalculatorBlockName } from 'state'
 
 type StyledBlockProps = {
   content: CalculatorBlockName
@@ -36,6 +31,7 @@ const StyledBlock = styled.div<StyledTransient<StyledBlockProps>>`
 type CalculatorBlockProps = StyledBlockProps & {
   type?: string
   disabled?: boolean
+  onDoubleClick?: (blockName: CalculatorBlockName) => void
 }
 
 export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
@@ -43,6 +39,7 @@ export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
     {
       type = DRAG_TYPE,
 
+      onDoubleClick,
       disabled,
       shadow,
       opacity = 1,
@@ -61,6 +58,7 @@ export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
           content,
         })}
         ref={ref}
+        onDoubleClick={onDoubleClick ? () => onDoubleClick(content) : undefined}
       >
         <Component disabled={disabled} />
       </StyledBlock>
@@ -69,27 +67,16 @@ export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
 )
 type DraggableCalculatorBlockProps = CalculatorBlockProps & {
   type?: string
-  onDidDrop: (blockName: CalculatorBlockName) => void
 }
 
 export const DraggableCalculatorBlock: FC<DraggableCalculatorBlockProps> = ({
   type = DRAG_TYPE,
-  onDidDrop,
   ...rest
 }) => {
-  const [collected, dragSource, dragPreview] = useDrag<
-    DragItem,
-    unknown,
-    { isDragging: boolean }
-  >(
+  const [, dragSource, dragPreview] = useDrag<DragItem, unknown, { isDragging: boolean }>(
     () => ({
       type,
       item: { calculatorBlockName: rest.content },
-      end: (item, monitor) => {
-        if (monitor.didDrop()) {
-          onDidDrop(rest.content)
-        }
-      },
       collect: monitor => ({
         //this will be injected in some component
         isDragging: monitor.isDragging(),
