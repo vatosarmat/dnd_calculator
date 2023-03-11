@@ -15,7 +15,17 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "plugins": [
+      {
+        "name": "@styled/typescript-styled-plugin",
+        "lint": {
+          "unknownProperties": "error",
+          "duplicateProperties": "warning",
+          "emptyRules": "warning"
+        }
+      }
+    ]
   },
   "include": ["src"]
 }

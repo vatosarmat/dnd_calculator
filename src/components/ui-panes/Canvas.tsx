@@ -1,17 +1,27 @@
 import { useReducer, Reducer } from 'react'
 import { useDrop } from 'react-dnd'
+import styled from 'styled-components'
 
-import classes from './Canvas.module.css'
-import { DRAG_TYPE, DragBlockName, DragItem } from 'common'
-import Button, { EqualButton, OperationsBlock, DigitsBlock } from './controls/Button'
+import CalculatorBlock, {
+  CalculatorBlockName,
+  DragItem,
+  DRAG_TYPE,
+} from 'components/calculator-block'
 
-export type CanvasProps = {
-  content?: string
-}
+const StyledBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 2px dashed ${({ theme: { palette } }) => palette.gray.canvasBorder};
+  border-radius: ${({ theme: { decoration } }) => decoration.buttonBorderRadius};
+`
+
+const Item = styled.div<{ order: number }>`
+  order: ${({ order }) => order};
+`
 
 type State = {
   nextPos: number
-  blockPos: Record<DragBlockName, number | null>
+  blockPos: Record<CalculatorBlockName, number | null>
 }
 
 const initialState: State = {
@@ -40,7 +50,7 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
         ...state,
         blockPos: {
           ...state.blockPos,
-          [payload.dragBlockName]: state.nextPos + 1,
+          [payload.calculatorBlockName]: state.nextPos + 1,
         },
         nextPos: state.nextPos + 1,
       }
@@ -50,7 +60,7 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
         ...state,
         blockPos: {
           ...state.blockPos,
-          [payload.dragBlockName]: null,
+          [payload.calculatorBlockName]: null,
         },
         nextPos: state.nextPos - 1,
       }
@@ -58,10 +68,10 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
   }
 }
 
-const Canvas: React.FC<CanvasProps> = ({ content = '' }) => {
+const Canvas: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { blockPos } = state
-  const [collected, dropTarget] = useDrop(
+  const [, dropTarget] = useDrop<DragItem>(
     () => ({
       accept: DRAG_TYPE,
       drop: (item: DragItem) => {
@@ -76,23 +86,18 @@ const Canvas: React.FC<CanvasProps> = ({ content = '' }) => {
   )
 
   return (
-    <div ref={dropTarget} className={classes.root}>
-      {blockPos.operations && (
-        <div className={classes[`order-${blockPos.operations}`]}>
-          <OperationsBlock />
-        </div>
-      )}
-      {blockPos.digits && (
-        <div className={classes[`order-${blockPos.digits}`]}>
-          <DigitsBlock />
-        </div>
-      )}
-      {blockPos.equal && (
-        <div className={classes[`order-${blockPos.equal}`]}>
-          <EqualButton />
-        </div>
-      )}
-    </div>
+    <StyledBlock ref={dropTarget}>
+      {(['operations', 'digits', 'equal'] as const).map(blockName => {
+        const pos = blockPos[blockName]
+        return (
+          pos && (
+            <Item order={pos}>
+              <CalculatorBlock draggable disabled content={blockName} />
+            </Item>
+          )
+        )
+      })}
+    </StyledBlock>
   )
 }
 

@@ -1,83 +1,46 @@
-import { ReactNode, forwardRef, Ref, FC } from 'react'
-import { useDrag } from 'react-dnd'
-import clsx from 'clsx'
-
-import classes from './Button.module.css'
-import classes2 from './ButtonBlock.module.css'
-import Draggable from '../Draggable'
-import { DRAG_TYPE, DragItem } from 'common'
+import styled, { css } from 'styled-components'
 
 export type ButtonProps = {
-  children?: string
+  $full?: boolean
+  $primary?: boolean
+
   disabled?: boolean
-  extraClasses?: string[] | string
-  ref?: Ref<HTMLButtonElement>
+
+  children?: string
 }
 
-const Button: FC<ButtonProps> = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, extraClasses = [], ...rest }, ref) => {
-    return (
-      <button
-        disabled
-        {...rest}
-        className={clsx(classes.root, ...[extraClasses].flat().map(key => classes[key]))}
-        ref={ref}
-      >
-        {children}
-      </button>
-    )
+const StyledButton = styled.button<ButtonProps>`
+  ${({ $full }) =>
+    $full &&
+    css`
+      width: 100%;
+      height: 100%;
+    `}
+
+  border-style: solid;
+  border-color: ${({ theme }) => theme.palette.gray.buttonBorder};
+  border-radius: ${({ theme }) => theme.decoration.buttonBorderRadius};
+
+  ${({ $primary, theme: { palette, decoration } }) =>
+    $primary
+      ? css`
+          border-width: 0px;
+          color: ${palette.gray.white};
+          background-color: ${palette.primary};
+        `
+      : css`
+          border-width: 1px;
+          color: ${palette.gray.black};
+          background-color: ${palette.gray.white};
+        `}
+
+  &:disabled {
+    pointer-events: none;
   }
-)
+`
 
-export type DraggableProps = {}
+StyledButton.defaultProps = {
+  $full: true,
+}
 
-export default Button
-
-type EqualButtonProps = Pick<ButtonProps, 'disabled'>
-
-export const EqualButton = forwardRef<HTMLButtonElement, EqualButtonProps>(
-  ({ disabled }: EqualButtonProps, ref) => (
-    <Button ref={ref} disabled={disabled} extraClasses={'large'}>
-      {'='}
-    </Button>
-  )
-)
-
-export const DraggableEqualButton = Draggable<DragItem>(DRAG_TYPE, {
-  dragBlockName: 'equal',
-})(EqualButton)
-
-export const OperationsBlock = forwardRef<HTMLDivElement>((props, ref) => {
-  const ops = ['/', 'x', '-', '+']
-
-  return (
-    <div ref={ref} className={classes2.root}>
-      {ops.map(op => (
-        <Button key={op}>{op}</Button>
-      ))}
-    </div>
-  )
-})
-export const DraggableOperationsBlock = Draggable<DragItem>(DRAG_TYPE, {
-  dragBlockName: 'operations',
-})(OperationsBlock)
-
-export const DigitsBlock = forwardRef<HTMLDivElement>((props, ref) => {
-  const digits = Array(9)
-    .fill(null)
-    .map((_, key) => (key + 1).toString())
-    .reverse()
-
-  return (
-    <div ref={ref} className={clsx(classes2.root, classes2.reverse)}>
-      {[...digits, ',', '0'].map(d => (
-        <Button key={d} extraClasses={d === '0' ? 'width-3' : 'width-2'}>
-          {d}
-        </Button>
-      ))}
-    </div>
-  )
-})
-export const DraggableDigitsBlock = Draggable<DragItem>(DRAG_TYPE, {
-  dragBlockName: 'digits',
-})(DigitsBlock)
+export default StyledButton
