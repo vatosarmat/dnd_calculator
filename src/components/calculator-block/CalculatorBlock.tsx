@@ -1,4 +1,4 @@
-import { useEffect, FC } from 'react'
+import { useEffect, FC, forwardRef } from 'react'
 import { useDrag } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import styled, { css } from 'styled-components'
@@ -19,9 +19,11 @@ type StyledBlockProps = {
 }
 
 const StyledBlock = styled.div<StyledTransient<StyledBlockProps>>`
+  width: ${({ $content, theme: { layout } }) => layout.block.width};
   height: ${({ $content, theme: { layout } }) => layout.block.height[$content]};
   padding: ${({ theme }) => theme.spacing(0.5)}px;
   border-radius: 4px;
+  background-color: ${({ theme: { palette } }) => palette.gray.white};
   opacity: ${({ $opacity }) => $opacity};
 
   ${({ $shadow }) =>
@@ -32,25 +34,62 @@ const StyledBlock = styled.div<StyledTransient<StyledBlockProps>>`
 `
 
 type CalculatorBlockProps = StyledBlockProps & {
-  draggable?: boolean
   type?: string
   disabled?: boolean
 }
 
-const CalculatorBlock: FC<CalculatorBlockProps> = ({
-  draggable,
+export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
+  (
+    {
+      type = DRAG_TYPE,
+
+      disabled,
+      shadow,
+      opacity = 1,
+
+      content,
+    },
+    ref
+  ) => {
+    const Component = getCalculatorBlockComponent(content)
+
+    return (
+      <StyledBlock
+        {...styledTransient({
+          opacity,
+          shadow,
+          content,
+        })}
+        ref={ref}
+      >
+        <Component disabled={disabled} />
+      </StyledBlock>
+    )
+  }
+)
+type DraggableCalculatorBlockProps = CalculatorBlockProps & {
+  type?: string
+  onDidDrop: (blockName: CalculatorBlockName) => void
+}
+
+export const DraggableCalculatorBlock: FC<DraggableCalculatorBlockProps> = ({
   type = DRAG_TYPE,
-
-  disabled,
-  shadow,
-  opacity = 1,
-
-  content,
+  onDidDrop,
+  ...rest
 }) => {
-  const [, dragSource, dragPreview] = useDrag<DragItem>(
+  const [collected, dragSource, dragPreview] = useDrag<
+    DragItem,
+    unknown,
+    { isDragging: boolean }
+  >(
     () => ({
       type,
-      item: { calculatorBlockName: content },
+      item: { calculatorBlockName: rest.content },
+      end: (item, monitor) => {
+        if (monitor.didDrop()) {
+          onDidDrop(rest.content)
+        }
+      },
       collect: monitor => ({
         //this will be injected in some component
         isDragging: monitor.isDragging(),
@@ -65,15 +104,5 @@ const CalculatorBlock: FC<CalculatorBlockProps> = ({
     dragPreview(getEmptyImage(), { captureDraggingState: true })
   }, [])
 
-  const Component = getCalculatorBlockComponent(content)
-
-  const a = styledTransient({ shadow, opacity, content })
-
-  return (
-    <StyledBlock {...a} ref={draggable ? dragSource : undefined}>
-      <Component disabled={disabled} />
-    </StyledBlock>
-  )
+  return <CalculatorBlock {...rest} ref={dragSource} />
 }
-
-export default CalculatorBlock

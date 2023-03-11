@@ -21,7 +21,7 @@ const StyledBlock = styled.div`
   background-color: ${({ theme: { palette } }) => palette.gray.white};
 
   & > * {
-    width: ${({ theme: { layout } }) => layout.pane.width};
+    width: ${({ theme: { layout } }) => layout.block.width};
   }
 `
 

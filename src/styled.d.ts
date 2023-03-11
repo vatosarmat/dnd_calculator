@@ -6,10 +6,8 @@ declare module 'styled-components' {
   export interface DefaultTheme {
     spacing(n?: number): number
     layout: {
-      pane: {
-        width: string
-      }
       block: {
+        width: string
         height: {
           operations: string
           digits: string

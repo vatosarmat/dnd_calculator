@@ -2,7 +2,8 @@ import { useReducer, Reducer } from 'react'
 import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
 
-import CalculatorBlock, {
+import {
+  CalculatorBlock,
   CalculatorBlockName,
   DragItem,
   DRAG_TYPE,
@@ -11,7 +12,10 @@ import CalculatorBlock, {
 const StyledBlock = styled.div`
   display: flex;
   flex-direction: column;
-  border: 2px dashed ${({ theme: { palette } }) => palette.gray.canvasBorder};
+  outline-width: 2px;
+  outline-style: dashed;
+  outline-color: ${({ theme: { palette } }) => palette.gray.canvasBorder};
+  outline-offset: -2px;
   border-radius: ${({ theme: { decoration } }) => decoration.buttonBorderRadius};
 `
 
@@ -91,8 +95,8 @@ const Canvas: React.FC = () => {
         const pos = blockPos[blockName]
         return (
           pos && (
-            <Item order={pos}>
-              <CalculatorBlock draggable disabled content={blockName} />
+            <Item key={blockName} order={pos}>
+              <CalculatorBlock disabled content={blockName} />
             </Item>
           )
         )

@@ -5,10 +5,8 @@ const theme: DefaultTheme = {
     return this.layout.spacing * n
   },
   layout: {
-    pane: {
-      width: '240px',
-    },
     block: {
+      width: '240px',
       height: {
         operations: '56px',
         digits: '224px',

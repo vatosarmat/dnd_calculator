@@ -3,7 +3,8 @@ import EqualButton from './blocks/EqualButton'
 import ButtonBlock from './blocks/ButtonsBlock'
 
 export const DRAG_TYPE = 'CALCULATOR_BLOCK'
-export type CalculatorBlockName = 'operations' | 'digits' | 'equal'
+export const calculatorBlockNameValues = ['operations', 'digits', 'equal'] as const
+export type CalculatorBlockName = typeof calculatorBlockNameValues[number]
 export type DragItem = { calculatorBlockName: CalculatorBlockName }
 
 export type CalculatorBlockContentProps = {

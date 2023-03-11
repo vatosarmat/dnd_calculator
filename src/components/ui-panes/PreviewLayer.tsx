@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { useDragLayer } from 'react-dnd'
 import styled from 'styled-components'
 
-import CalculatorBlock, { DragItem } from 'components/calculator-block'
+import { CalculatorBlock, DragItem } from 'components/calculator-block'
 
 const StyledBlock = styled.div`
   position: fixed;
@@ -35,7 +35,12 @@ const PreviewLayer: FC = () => {
   return (
     <StyledBlock>
       <div style={style}>
-        <CalculatorBlock disabled content={item.calculatorBlockName} />
+        <CalculatorBlock
+          disabled
+          shadow
+          opacity={0.7}
+          content={item.calculatorBlockName}
+        />
       </div>
     </StyledBlock>
   )
