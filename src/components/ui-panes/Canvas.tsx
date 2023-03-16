@@ -180,7 +180,7 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
   switch (type) {
     case 'drop': {
       const { blockName, to } = payload
-      if (to) {
+      if (typeof to === 'number') {
         const a = state.slice(0, to)
         const b = state.slice(to)
         return [...a, blockName, ...b]
@@ -192,11 +192,23 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
       if (from === to) {
         return state
       }
-      const [min, max] = from > to ? [to, from] : [from, to]
-      const a = state.slice(0, min)
-      const b = state.slice(min + 1, max)
-      const c = max < state.length - 1 ? state.slice(max + 1) : []
-      return [...a, state[max], ...b, state[min], ...c]
+
+      if (from < to) {
+        return [
+          ...state.slice(0, from),
+          ...state.slice(from + 1, to),
+          state[from],
+          ...state.slice(to),
+        ]
+      }
+
+      //to < from
+      return [
+        ...state.slice(0, to),
+        state[from],
+        ...state.slice(to, from),
+        ...state.slice(from + 1),
+      ]
     }
     case 'return': {
       return state.filter(block => block !== payload.blockName)
@@ -250,16 +262,25 @@ const Canvas: React.FC = () => {
     (index?: number) => (blockName: CalculatorBlockName, pos: 'above' | 'below') => {
       const to = typeof index === 'number' ? index + (pos === 'above' ? 0 : 1) : undefined
       console.log(to)
-      localDispatch({
-        type: 'drop',
-        payload: { blockName, to },
-      })
-      dispatch({
-        type: 'drop',
-        payload: {
-          blockName,
-        },
-      })
+      const blockPos = blocks.indexOf(blockName)
+
+      if (blockPos === -1 || to === undefined) {
+        localDispatch({
+          type: 'drop',
+          payload: { blockName, to },
+        })
+        dispatch({
+          type: 'drop',
+          payload: {
+            blockName,
+          },
+        })
+      } else {
+        localDispatch({
+          type: 'move',
+          payload: { from: blockPos, to },
+        })
+      }
     }
 
   return (

@@ -1,13 +1,14 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import { useDragLayer } from 'react-dnd'
 import styled from 'styled-components'
 
 import { CalculatorBlock, DragItem } from 'components/calculator-block'
+import { StateContext, calculatorBlockNameValues } from 'state'
 
 const StyledBlock = styled.div`
   position: fixed;
   pointer-events: none;
-  z-index: 100;
+  z-index: 200;
   left: 0;
   top: 0;
   width: 100%;
@@ -15,6 +16,7 @@ const StyledBlock = styled.div`
 `
 
 const PreviewLayer: FC = () => {
+  const { blockLocation } = useContext(StateContext)
   const { isDragging, item, currentOffset } = useDragLayer(monitor => ({
     item: monitor.getItem<DragItem>(),
     currentOffset: monitor.getSourceClientOffset(),
@@ -38,7 +40,7 @@ const PreviewLayer: FC = () => {
         <CalculatorBlock
           disabled
           shadow
-          opacity={0.7}
+          opacity={blockLocation[item.calculatorBlockName] === 'palette' ? 0.7 : 1}
           content={item.calculatorBlockName}
         />
       </div>
