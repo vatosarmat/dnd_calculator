@@ -7,20 +7,22 @@ declare module 'styled-components' {
     spacing(n?: number): number
     layout: {
       block: {
-        width: string
+        width: number
         height: {
-          operations: string
-          digits: string
-          equal: string
+          operations: number
+          digits: number
+          equal: number
+          display: number
         }
       }
       spacing: number
     }
     decoration: {
-      buttonBorderRadius: string
+      buttonBorderRadius: number
     }
     palette: {
       primary: string
+      sky: string
       gray: {
         black: string
         white: string

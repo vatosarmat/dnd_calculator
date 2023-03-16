@@ -21,8 +21,7 @@
         "name": "@styled/typescript-styled-plugin",
         "lint": {
           "unknownProperties": "error",
-          "duplicateProperties": "warning",
-          "emptyRules": "warning"
+          "duplicateProperties": "warning"
         }
       }
     ]

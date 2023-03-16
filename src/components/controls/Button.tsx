@@ -19,7 +19,7 @@ const StyledButton = styled.button<ButtonProps>`
 
   border-style: solid;
   border-color: ${({ theme }) => theme.palette.gray.buttonBorder};
-  border-radius: ${({ theme }) => theme.decoration.buttonBorderRadius};
+  border-radius: ${({ theme }) => theme.decoration.buttonBorderRadius}px;
 
   ${({ $primary, theme: { palette, decoration } }) =>
     $primary

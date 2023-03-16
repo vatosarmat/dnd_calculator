@@ -6,21 +6,23 @@ const theme: DefaultTheme = {
   },
   layout: {
     block: {
-      width: '240px',
+      width: 240,
       height: {
-        operations: '56px',
-        digits: '224px',
-        equal: '72px',
+        operations: 56,
+        digits: 224,
+        equal: 72,
+        display: 60,
       },
     },
     //for various paddings and gaps
     spacing: 8,
   },
   decoration: {
-    buttonBorderRadius: '6px',
+    buttonBorderRadius: 6,
   },
   palette: {
     primary: '#5d5fef',
+    sky: '#f0f9ff',
     gray: {
       black: '#000000',
       white: '#ffffff',

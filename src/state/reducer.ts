@@ -10,6 +10,7 @@ export const initialState: State = {
     operations: 'palette',
     digits: 'palette',
     equal: 'palette',
+    display: 'palette',
   },
 }
 

@@ -11,14 +11,16 @@ type StyledBlockProps = {
   content: CalculatorBlockName
   shadow?: boolean
   opacity?: 0.5 | 0.7 | 1
+  transparent?: boolean
 }
 
 const StyledBlock = styled.div<StyledTransient<StyledBlockProps>>`
-  width: ${({ $content, theme: { layout } }) => layout.block.width};
-  height: ${({ $content, theme: { layout } }) => layout.block.height[$content]};
+  width: ${({ $content, theme: { layout } }) => layout.block.width}px;
+  height: ${({ $content, theme: { layout } }) => layout.block.height[$content]}px;
   padding: ${({ theme }) => theme.spacing(0.5)}px;
   border-radius: 4px;
-  background-color: ${({ theme: { palette } }) => palette.gray.white};
+  background-color: ${({ $transparent, theme: { palette } }) =>
+    $transparent ? 'transparent' : palette.gray.white};
   opacity: ${({ $opacity }) => $opacity};
 
   ${({ $shadow }) =>
@@ -43,6 +45,7 @@ export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
       disabled,
       shadow,
       opacity = 1,
+      transparent,
 
       content,
     },
@@ -56,6 +59,7 @@ export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
           opacity,
           shadow,
           content,
+          transparent,
         })}
         ref={ref}
         onDoubleClick={onDoubleClick ? () => onDoubleClick(content) : undefined}
