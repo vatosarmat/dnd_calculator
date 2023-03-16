@@ -13,23 +13,29 @@ export const DraggableCalculatorBlock: FC<DraggableCalculatorBlockProps> = ({
   type = DRAG_TYPE,
   ...rest
 }) => {
-  const [, dragSource, dragPreview] = useDrag<DragItem, unknown, { isDragging: boolean }>(
-    () => ({
-      type,
-      item: { calculatorBlockName: rest.content },
-      collect: monitor => ({
-        //this will be injected in some component
-        isDragging: monitor.isDragging(),
-        handlerId: monitor.getHandlerId(),
-      }),
+  const [{ isDragging }, dragSource, dragPreview] = useDrag<
+    DragItem,
+    unknown,
+    { isDragging: boolean }
+  >(() => ({
+    type,
+    item: { calculatorBlockName: rest.content },
+    collect: monitor => ({
+      //this will be injected in some component
+      isDragging: monitor.isDragging(),
+      handlerId: monitor.getHandlerId(),
     }),
-    []
-  )
+  }))
 
   //clear browser default preview
   useEffect(() => {
     dragPreview(getEmptyImage(), { captureDraggingState: true })
   }, [])
+
+  if (isDragging) {
+    rest.shadow = false
+    rest.transparency = 'high'
+  }
 
   return <CalculatorBlock {...rest} ref={dragSource} />
 }

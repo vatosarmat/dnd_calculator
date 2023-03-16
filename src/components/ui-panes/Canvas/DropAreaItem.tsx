@@ -5,13 +5,12 @@ import styled, { css } from 'styled-components'
 
 import Hr, { HrProps } from './Hr'
 import { DragItem, DRAG_TYPE } from 'components/calculator-block'
-import { CalculatorBlockName } from 'state'
 
-type DropAreaItemDivProps = {
+type DivProps = {
   $grow?: boolean
 }
 
-const DropAreaItemDiv = styled.div<DropAreaItemDivProps>`
+const Div = styled.div<DivProps>`
   position: relative;
   ${({ $grow, theme }) =>
     $grow &&
@@ -21,24 +20,23 @@ const DropAreaItemDiv = styled.div<DropAreaItemDivProps>`
 `
 
 type DropAreaItemProps = PropsWithChildren<{
-  noHr?: boolean
-  onDrop: (blockName: CalculatorBlockName, pos: 'above' | 'below') => void
+  correctHrPos?: (item: DragItem, pos: 'above' | 'below') => HrProps['$pos']
+  onDrop: (item: DragItem, pos: 'above' | 'below') => void
 }>
 
-const DropAreaItem: FC<DropAreaItemProps> = ({ children, onDrop, noHr }) => {
+const DropAreaItem: FC<DropAreaItemProps> = ({ children, onDrop, correctHrPos }) => {
   const dropAreaElementRef = useRef<HTMLDivElement | null>(null)
   const [hrPos, setHrPos] = useState<HrProps['$pos']>('none')
-  const [{ handlerId, isHovering, item }, drop] = useDrop<
+  const [{ isOver }, drop] = useDrop<
     DragItem,
     void,
-    { handlerId: Identifier | null; isHovering: boolean; item: CalculatorBlockName }
+    { handlerId: Identifier | null; isOver: boolean }
   >({
     accept: DRAG_TYPE,
     collect(monitor) {
       return {
         handlerId: monitor.getHandlerId(),
-        isHovering: monitor.canDrop() && monitor.isOver(),
-        item: monitor.getItem(),
+        isOver: monitor.isOver(),
       }
     },
     hover(draggedItem: DragItem, monitor) {
@@ -52,18 +50,26 @@ const DropAreaItem: FC<DropAreaItemProps> = ({ children, onDrop, noHr }) => {
       const draggedItemInDropAreaPos =
         draggedItemInViewportPos.y - dropAreaBoundingRect.top
 
-      setHrPos(draggedItemInDropAreaPos >= dropAreaMiddleY ? 'below' : 'above')
+      let hrPos: HrProps['$pos'] =
+        draggedItemInDropAreaPos >= dropAreaMiddleY ? 'below' : 'above'
+
+      if (correctHrPos) {
+        hrPos = correctHrPos(draggedItem, hrPos)
+      }
+
+      setHrPos(hrPos)
     },
     drop(item, monitor) {
       //actually it should never be 'none'
-      onDrop(item.calculatorBlockName, hrPos === 'none' ? 'below' : hrPos)
+      onDrop(item, hrPos === 'none' ? 'below' : hrPos)
     },
   })
+
   useEffect(() => {
-    if (!isHovering) {
+    if (!isOver) {
       setHrPos('none')
     }
-  }, [isHovering])
+  }, [isOver])
 
   const callbackRef: RefCallback<HTMLDivElement> = el => {
     if (el) {
@@ -72,19 +78,11 @@ const DropAreaItem: FC<DropAreaItemProps> = ({ children, onDrop, noHr }) => {
     }
   }
 
-  if (children) {
-    return (
-      <DropAreaItemDiv ref={callbackRef}>
-        {children}
-        <Hr $pos={hrPos} />
-      </DropAreaItemDiv>
-    )
-  }
-
   return (
-    <DropAreaItemDiv ref={callbackRef} $grow>
-      {!noHr && <Hr $pos={hrPos === 'below' ? 'above' : hrPos} />}
-    </DropAreaItemDiv>
+    <Div ref={callbackRef} $grow={!children}>
+      {children}
+      <Hr $pos={hrPos} />
+    </Div>
   )
 }
 

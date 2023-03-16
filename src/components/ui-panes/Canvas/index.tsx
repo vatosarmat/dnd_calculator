@@ -18,8 +18,7 @@ type CanvasDivProps = {
 const CanvasDiv = styled.div<CanvasDivProps>`
   height: ${({ theme }) => {
     const { height } = theme.layout.block
-    const gap = theme.spacing()
-    return Object.values(height).reduce((ac, v) => ac + v + gap, 0) - gap
+    return Object.values(height).reduce((ac, v) => ac + v, 0)
   }}px;
   display: flex;
   flex-direction: column;
@@ -53,38 +52,57 @@ const Canvas: React.FC = () => {
     dispatch({ type: 'return', payload: { blockName } })
   }
 
-  const onDrop =
-    (index?: number) => (blockName: CalculatorBlockName, pos: 'above' | 'below') => {
-      const to = typeof index === 'number' ? index + (pos === 'above' ? 0 : 1) : undefined
-      console.log(to)
-      const blockPos = blocks.indexOf(blockName)
+  const onDrop = (index?: number) => (item: DragItem, pos: 'above' | 'below') => {
+    const to = typeof index === 'number' ? index + (pos === 'above' ? 0 : 1) : undefined
+    const blockName = item.calculatorBlockName
+    const blockPos = blocks.indexOf(blockName)
 
-      if (blockPos === -1 || to === undefined) {
-        localDispatch({
-          type: 'drop',
-          payload: { blockName, to },
-        })
-        dispatch({
-          type: 'drop',
-          payload: {
-            blockName,
-          },
-        })
-      } else {
-        localDispatch({
-          type: 'move',
-          payload: { from: blockPos, to },
-        })
-      }
+    if (blockPos === -1 || to === undefined) {
+      localDispatch({
+        type: 'drop',
+        payload: { blockName, to },
+      })
+      dispatch({
+        type: 'drop',
+        payload: {
+          blockName,
+        },
+      })
+    } else {
+      localDispatch({
+        type: 'move',
+        payload: { from: blockPos, to },
+      })
     }
+  }
+
+  const correctHrPos = (index: number) => (item: DragItem, pos: 'above' | 'below') => {
+    const notEmpty = blocks.length > 0
+    const overItself = blocks[index] === item.calculatorBlockName
+    const belowItself =
+      index >= 1 && blocks[index - 1] === item.calculatorBlockName && pos === 'above'
+    const aboveItself =
+      index < blocks.length - 1 &&
+      blocks[index + 1] === item.calculatorBlockName &&
+      pos === 'below'
+
+    if (notEmpty && (overItself || belowItself || aboveItself)) {
+      return 'none'
+    }
+
+    return pos
+  }
 
   return (
     <CanvasDiv $hoverDrop={isOver} ref={dropTarget}>
       {blocks.map((blockName, index) => {
         return (
-          <DropAreaItem key={blockName} onDrop={onDrop(index)}>
+          <DropAreaItem
+            key={blockName}
+            correctHrPos={correctHrPos(index)}
+            onDrop={onDrop(index)}
+          >
             <DraggableCalculatorBlock
-              transparent
               key={blockName}
               disabled
               content={blockName}
@@ -94,7 +112,10 @@ const Canvas: React.FC = () => {
         )
       })}
       {blocks.length < calculatorBlockNameValues.length && (
-        <DropAreaItem noHr={blocks.length === 0} onDrop={onDrop()} />
+        <DropAreaItem
+          correctHrPos={() => (blocks.length === 0 ? 'none' : 'above')}
+          onDrop={onDrop()}
+        />
       )}
     </CanvasDiv>
   )

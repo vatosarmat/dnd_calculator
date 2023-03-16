@@ -1,4 +1,4 @@
-import { useContext, useReducer, Reducer } from 'react'
+import { useContext } from 'react'
 import styled from 'styled-components'
 
 import { CalculatorBlock, DraggableCalculatorBlock } from 'components/calculator-block'
@@ -22,7 +22,7 @@ const Palette: React.FC<PaletteProps> = () => {
         return blockLocation[blockName] === 'palette' ? (
           <DraggableCalculatorBlock {...props} shadow />
         ) : (
-          <CalculatorBlock {...props} opacity={0.5} />
+          <CalculatorBlock {...props} transparency={'high'} />
         )
       })}
     </StyledBlock>

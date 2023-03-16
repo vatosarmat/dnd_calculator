@@ -2,34 +2,37 @@ import { forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { StyledTransient, styledTransient } from 'utils'
-import { DRAG_TYPE, getCalculatorBlockComponent } from './helpers'
+import { getCalculatorBlockComponent } from './helpers'
 import { CalculatorBlockName } from 'state'
 
-type StyledBlockProps = {
-  content: CalculatorBlockName
-  shadow?: boolean
-  opacity?: 0.5 | 0.7 | 1
-  transparent?: boolean
+const TRANSPARENCY_TABLE = {
+  low: 0.9,
+  high: 0.4,
 }
 
-const StyledBlock = styled.div<StyledTransient<StyledBlockProps>>`
+type DivProps = {
+  content: CalculatorBlockName
+  shadow?: boolean
+  transparency?: keyof typeof TRANSPARENCY_TABLE
+}
+
+const Div = styled.div<StyledTransient<DivProps>>`
   width: ${({ $content, theme: { layout } }) => layout.block.width}px;
   height: ${({ $content, theme: { layout } }) => layout.block.height[$content]}px;
   padding: ${({ theme }) => theme.spacing(0.5)}px;
   border-radius: 4px;
-  background-color: ${({ $transparent, theme: { palette } }) =>
-    $transparent ? 'transparent' : palette.gray.white};
-  opacity: ${({ $opacity }) => $opacity};
+  opacity: ${({ $transparency }) =>
+    $transparency ? TRANSPARENCY_TABLE[$transparency] : 1};
 
-  ${({ $shadow }) =>
+  ${({ $shadow, theme: { palette } }) =>
     $shadow &&
     css`
+      background-color: ${palette.gray.white};
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
     `}
 `
 
-export type CalculatorBlockProps = StyledBlockProps & {
-  type?: string
+export type CalculatorBlockProps = DivProps & {
   disabled?: boolean
   onDoubleClick?: (blockName: CalculatorBlockName) => void
 }
@@ -37,13 +40,10 @@ export type CalculatorBlockProps = StyledBlockProps & {
 export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
   (
     {
-      type = DRAG_TYPE,
-
       onDoubleClick,
       disabled,
       shadow,
-      opacity = 1,
-      transparent,
+      transparency,
 
       content,
     },
@@ -52,18 +52,17 @@ export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
     const Component = getCalculatorBlockComponent(content)
 
     return (
-      <StyledBlock
+      <Div
         {...styledTransient({
-          opacity,
           shadow,
           content,
-          transparent,
+          transparency,
         })}
         ref={ref}
         onDoubleClick={onDoubleClick ? () => onDoubleClick(content) : undefined}
       >
         <Component disabled={disabled} />
-      </StyledBlock>
+      </Div>
     )
   }
 )
