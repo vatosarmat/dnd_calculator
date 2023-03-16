@@ -21,7 +21,7 @@ const StyledButton = styled.button<ButtonProps>`
   border-color: ${({ theme }) => theme.palette.gray.buttonBorder};
   border-radius: ${({ theme }) => theme.decoration.buttonBorderRadius}px;
 
-  ${({ $primary, theme: { palette, decoration } }) =>
+  ${({ $primary, theme: { palette } }) =>
     $primary
       ? css`
           border-width: 0px;

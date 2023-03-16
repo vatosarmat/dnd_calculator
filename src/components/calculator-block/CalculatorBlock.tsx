@@ -17,7 +17,7 @@ type DivProps = {
 }
 
 const Div = styled.div<StyledTransient<DivProps>>`
-  width: ${({ $content, theme: { layout } }) => layout.block.width}px;
+  width: ${({ theme: { layout } }) => layout.block.width}px;
   height: ${({ $content, theme: { layout } }) => layout.block.height[$content]}px;
   padding: ${({ theme }) => theme.spacing(0.5)}px;
   border-radius: 4px;

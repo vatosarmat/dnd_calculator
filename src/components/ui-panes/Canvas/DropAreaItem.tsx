@@ -12,7 +12,7 @@ type DivProps = {
 
 const Div = styled.div<DivProps>`
   position: relative;
-  ${({ $grow, theme }) =>
+  ${({ $grow }) =>
     $grow &&
     css`
       flex-grow: 1;
@@ -59,7 +59,7 @@ const DropAreaItem: FC<DropAreaItemProps> = ({ children, onDrop, correctHrPos })
 
       setHrPos(hrPos)
     },
-    drop(item, monitor) {
+    drop(item, _monitor) {
       //actually it should never be 'none'
       onDrop(item, hrPos === 'none' ? 'below' : hrPos)
     },

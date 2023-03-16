@@ -10,7 +10,7 @@ import {
 import { reducer, initialState, Action, State } from './reducer'
 
 export const StateContext = createContext(initialState)
-export const DispatchContext = createContext<Dispatch<Action>>(a => {})
+export const DispatchContext = createContext<Dispatch<Action>>(_ => {})
 
 type StateProviderProps = PropsWithChildren<{
   storedState?: State

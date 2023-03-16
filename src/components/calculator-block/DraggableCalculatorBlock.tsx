@@ -30,6 +30,7 @@ export const DraggableCalculatorBlock: FC<DraggableCalculatorBlockProps> = ({
   //clear browser default preview
   useEffect(() => {
     dragPreview(getEmptyImage(), { captureDraggingState: true })
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (isDragging) {
