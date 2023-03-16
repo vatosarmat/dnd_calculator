@@ -1,2 +1,3 @@
-export { CalculatorBlock, DraggableCalculatorBlock } from './CalculatorBlock'
+export { CalculatorBlock } from './CalculatorBlock'
+export { DraggableCalculatorBlock } from './DraggableCalculatorBlock'
 export * from './helpers'
