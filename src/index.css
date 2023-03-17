@@ -20,3 +20,10 @@ li {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+#root {
+  display: flex;
+  justify-content: center;
+
+  padding: 64px;
+}

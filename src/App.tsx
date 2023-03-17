@@ -25,7 +25,6 @@ const Grid = styled.div`
     grid-column-start: 2;
   }
 
-  margin-top: ${({ theme }) => theme.spacing(8)}px;
   padding: ${({ theme }) => theme.spacing(6)}px;
   background-color: ${({ theme: { palette } }) => palette.gray.white};
 `
