@@ -8,3 +8,5 @@ export const styledTransient = <T extends object>(props: T): StyledTransient<T> 
     ac[`$${k}`] = v
     return ac
   }, {} as StyledTransient<T>)
+
+export const capitalize = (str: string) => str[0].toLocaleUpperCase() + str.slice(1)
