@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { useDragLayer } from 'react-dnd'
 import styled from 'styled-components'
 
-import { CalculatorBlock, DragItem } from 'components/calculator-block'
+import { CalculatorBlock, DragItem, DRAG_TYPE } from 'components/calculator-block'
 
 const StyledBlock = styled.div`
   position: fixed;
@@ -16,6 +16,7 @@ const StyledBlock = styled.div`
 
 const PreviewLayer: FC = () => {
   const { isDragging, item, currentOffset } = useDragLayer(monitor => ({
+    type: DRAG_TYPE,
     item: monitor.getItem<DragItem>(),
     currentOffset: monitor.getSourceClientOffset(),
     isDragging: monitor.isDragging(),

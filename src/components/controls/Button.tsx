@@ -1,3 +1,4 @@
+import { MouseEventHandler } from 'react'
 import styled, { css } from 'styled-components'
 
 export type ButtonProps = {
@@ -5,6 +6,7 @@ export type ButtonProps = {
   $primary?: boolean
 
   disabled?: boolean
+  onClick?: MouseEventHandler
 
   children?: string
 }

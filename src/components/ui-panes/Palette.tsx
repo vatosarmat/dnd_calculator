@@ -13,16 +13,16 @@ const StyledBlock = styled.div<PaletteProps>`
 `
 
 const Palette: React.FC<PaletteProps> = () => {
-  const { blockLocation } = useContext(StateContext)
+  const { canvasContent } = useContext(StateContext)
 
   return (
     <StyledBlock>
       {calculatorBlockNameValues.map(blockName => {
         const props = { key: blockName, disabled: true, content: blockName }
-        return blockLocation[blockName] === 'palette' ? (
-          <DraggableCalculatorBlock {...props} shadow />
-        ) : (
+        return canvasContent.includes(blockName) ? (
           <CalculatorBlock {...props} transparency={'high'} />
+        ) : (
+          <DraggableCalculatorBlock {...props} shadow />
         )
       })}
     </StyledBlock>

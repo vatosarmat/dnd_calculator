@@ -2,7 +2,11 @@ import { Key } from 'react'
 
 import styled, { css, useTheme } from 'styled-components'
 
-const Div = styled.div`
+type DivProps = {
+  $disabled?: boolean
+}
+
+const Div = styled.div<DivProps>`
   display: flex;
   flex-direction: row;
 
@@ -10,10 +14,13 @@ const Div = styled.div`
 
   border-radius: ${({ theme: { decoration } }) => decoration.buttonBorderRadius}px;
   background-color: ${({ theme: { palette } }) => palette.gray.displayBg};
+
+  opacity: ${({ $disabled }) => ($disabled ? 0.9 : 1)};
 `
 
 type ButtonProps = {
   $checked?: boolean
+  disabled?: boolean
 }
 
 const Button = styled.button<ButtonProps>`
@@ -61,6 +68,7 @@ type ToggleButtonGroupProps<V extends Key> = {
   onChange: (value: V) => void
   value: V
   label?: (value: V) => string
+  disabled?: boolean
 }
 
 const ToggleButtonGroup = <V extends Key>({
@@ -68,14 +76,20 @@ const ToggleButtonGroup = <V extends Key>({
   value: checkedValue,
   onChange,
   label: labelFunc,
+  disabled,
 }: ToggleButtonGroupProps<V>) => {
   const theme = useTheme()
   return (
-    <Div>
+    <Div $disabled={disabled}>
       {items.map(({ value, label, icon: Icon }) => {
         const selectedValue = checkedValue === value
         return (
-          <Button $checked={selectedValue} key={value} onClick={() => onChange(value)}>
+          <Button
+            disabled={disabled}
+            $checked={selectedValue}
+            key={value}
+            onClick={() => onChange(value)}
+          >
             {Icon && <Icon color={selectedValue ? theme.palette.primary : undefined} />}
             {label ? label : labelFunc ? labelFunc(value) : value}
           </Button>
