@@ -14,7 +14,7 @@ import {
   StateContext,
   DispatchContext,
   calculatorBlockNameValues,
-} from 'state'
+} from 'state/canvas'
 
 const Canvas: React.FC = () => {
   const { canvasContent } = useContext(StateContext)

@@ -1,9 +1,10 @@
-import { forwardRef } from 'react'
+import { forwardRef, PropsWithChildren } from 'react'
 import styled, { css } from 'styled-components'
 
+import Buttons from './blocks/Buttons'
+import Display from './blocks/Display'
 import { StyledTransient, styledTransient } from 'utils'
-import { getCalculatorBlockComponent } from './helpers'
-import { CalculatorBlockName } from 'state'
+import { CalculatorBlockName } from 'state/canvas'
 
 const TRANSPARENCY_TABLE = {
   low: 0.9,
@@ -37,7 +38,10 @@ export type CalculatorBlockProps = DivProps & {
   onDoubleClick?: (blockName: CalculatorBlockName) => void
 }
 
-export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
+export const CalculatorBlock = forwardRef<
+  HTMLDivElement,
+  PropsWithChildren<CalculatorBlockProps>
+>(
   (
     {
       onDoubleClick,
@@ -46,10 +50,33 @@ export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
       transparency,
 
       content,
+      children: childrenProp,
     },
     ref
   ) => {
-    const Component = getCalculatorBlockComponent(content)
+    let children
+    if (childrenProp) {
+      children = childrenProp
+    } else {
+      switch (content) {
+        case 'display': {
+          children = <Display />
+          break
+        }
+        case 'operations': {
+          children = <Buttons.Operations disabled={disabled} />
+          break
+        }
+        case 'digits': {
+          children = <Buttons.Digits disabled={disabled} />
+          break
+        }
+        case 'equal': {
+          children = <Buttons.Equal disabled={disabled} />
+          break
+        }
+      }
+    }
 
     return (
       <Div
@@ -61,7 +88,7 @@ export const CalculatorBlock = forwardRef<HTMLDivElement, CalculatorBlockProps>(
         ref={ref}
         onDoubleClick={onDoubleClick ? () => onDoubleClick(content) : undefined}
       >
-        <Component disabled={disabled} />
+        {children}
       </Div>
     )
   }

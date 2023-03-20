@@ -1,3 +1,5 @@
 export { CalculatorBlock } from './CalculatorBlock'
 export { DraggableCalculatorBlock } from './DraggableCalculatorBlock'
 export * from './helpers'
+export { default as Display } from './blocks/Display'
+export { default as Buttons } from './blocks/Buttons'

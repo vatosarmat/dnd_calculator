@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import styled from 'styled-components'
 
 import { CalculatorBlock, DraggableCalculatorBlock } from 'components/calculator-block'
-import { StateContext, calculatorBlockNameValues } from 'state'
+import { StateContext, calculatorBlockNameValues } from 'state/canvas'
 
 export type PaletteProps = {}
 

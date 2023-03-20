@@ -12,7 +12,7 @@ import Calculator from 'components/ui-panes/Calculator'
 import ToggleButtonGroup from 'components/controls/ToggleButtonGroup'
 import { ReactComponent as EyeIcon } from 'components/icons/eye.svg'
 import { ReactComponent as AnglesIcon } from 'components/icons/angles.svg'
-import { StateProvider, StateContext, isCanvasFull } from 'state'
+import { StateProvider, StateContext, isCanvasFull } from 'state/canvas'
 import { capitalize } from 'utils'
 
 type GridProps = {
