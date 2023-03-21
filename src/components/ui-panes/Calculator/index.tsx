@@ -10,7 +10,8 @@ import type { State as CalcState, Action as CalcAction } from 'state/calculator/
 import type { CalculatorDigitExt, CalculatorControl } from 'state/calculator/model'
 
 const displayString = (state: InputState): string => {
-  return input.inputValue(state).toString()
+  const a = input.stringValue(state).toString()
+  return a
 }
 
 const Calculator: FC = () => {
