@@ -32,9 +32,7 @@ const Control: FC<CalculatorButtonBlockProps<CalculatorControl>> = props => {
 }
 
 const Digits: FC<CalculatorButtonBlockProps<CalculatorDigitExt>> = props => {
-  return (
-    <ButtonBlock {...props} items={calculatorDigitExtValues} $cols={3} $span={[10, 2]} />
-  )
+  return <ButtonBlock {...props} items={calculatorDigitExtValues} $cols={3} />
 }
 
 const Operations: FC<CalculatorButtonBlockProps<CalculatorOperation>> = props => {

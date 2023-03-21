@@ -23,6 +23,8 @@ const Calculator: FC = () => {
     let action: InputAction
     if (digit === ',') {
       action = { type: 'decimal_separator' }
+    } else if (digit === '∓') {
+      action = { type: 'sign' }
     } else {
       action = { type: 'digit', payload: { digit } }
     }
