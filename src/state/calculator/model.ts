@@ -17,3 +17,6 @@ export type CalculatorDigitExt = typeof calculatorDigitExtValues[number]
 
 export const calculatorOperationValues = ['/', 'x', '-', '+'] as const
 export type CalculatorOperation = typeof calculatorOperationValues[number]
+
+export const calculatorControlValues = ['=', 'C'] as const
+export type CalculatorControl = typeof calculatorControlValues[number]

@@ -9,13 +9,6 @@ export type State = {
   result: number | null
 }
 
-// const selectors = {
-//   displayNumber: ({ input: { integer, fraction, minus } }: State): number => {
-//     const abs = parseFloat([integer, fraction].join('.'))
-//     return minus ? -abs : abs
-//   },
-// }
-
 export const initialState: State = {
   mode: 'input',
   register: null,
@@ -23,9 +16,11 @@ export const initialState: State = {
   result: null,
 }
 
-export type Action =
+type ModeAction =
   | { type: 'operation'; payload: { operation: CalculatorOperation; operand: number } }
   | { type: 'equal'; payload: { operand: number } }
+
+export type Action = ModeAction | { type: 'reset'; payload?: {} }
 
 const operationExec: Record<CalculatorOperation, (a: number, b: number) => number> = {
   '/': (a, b) => a / b,
@@ -35,7 +30,7 @@ const operationExec: Record<CalculatorOperation, (a: number, b: number) => numbe
 }
 
 const modeReducer = {
-  input: (state: State, { payload, type }: Action): State => {
+  input: (state: State, { payload, type }: ModeAction): State => {
     switch (type) {
       case 'operation': {
         let result
@@ -73,7 +68,7 @@ const modeReducer = {
     }
   },
 
-  output: (state: State, { payload, type }: Action): State => {
+  output: (state: State, { payload, type }: ModeAction): State => {
     switch (type) {
       case 'operation': {
         return {
@@ -96,5 +91,8 @@ const modeReducer = {
 }
 
 export const reducer: Reducer<State, Action> = (state, action) => {
+  if (action.type === 'reset') {
+    return { ...initialState }
+  }
   return modeReducer[state.mode](state, action)
 }

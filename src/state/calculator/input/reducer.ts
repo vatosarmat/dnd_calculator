@@ -18,9 +18,13 @@ export type Action =
   | { type: 'digit'; payload: { digit: CalculatorDigit } }
   | { type: 'decimal_separator'; payload?: {} }
   | { type: 'sign'; payload?: {} }
+  | { type: 'reset'; payload?: {} }
 
 export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
   switch (type) {
+    case 'reset': {
+      return { ...initialState }
+    }
     case 'digit': {
       const newState = { ...state }
       if (newState.fraction === null) {

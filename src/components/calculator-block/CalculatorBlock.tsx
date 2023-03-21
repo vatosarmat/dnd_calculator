@@ -71,8 +71,8 @@ export const CalculatorBlock = forwardRef<
           children = <Buttons.Digits disabled={disabled} />
           break
         }
-        case 'equal': {
-          children = <Buttons.Equal disabled={disabled} />
+        case 'controls': {
+          children = <Buttons.Control disabled={disabled} />
           break
         }
       }

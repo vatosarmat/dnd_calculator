@@ -11,7 +11,7 @@ declare module 'styled-components' {
         height: {
           operations: number
           digits: number
-          equal: number
+          controls: number
           display: number
         }
       }
@@ -22,6 +22,7 @@ declare module 'styled-components' {
     }
     palette: {
       primary: string
+      secondary: string
       sky: string
       gray: {
         black: string

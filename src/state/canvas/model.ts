@@ -2,6 +2,6 @@ export const calculatorBlockNameValues = [
   'display',
   'operations',
   'digits',
-  'equal',
+  'controls',
 ] as const
 export type CalculatorBlockName = typeof calculatorBlockNameValues[number]

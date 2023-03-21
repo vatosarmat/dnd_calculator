@@ -1,7 +1,7 @@
 import type { Key } from 'react'
 import styled, { css } from 'styled-components'
 
-import Button from './Button'
+import Button, { ButtonProps } from './Button'
 
 type SpanItem = [childIndex: number, span: number]
 
@@ -42,30 +42,49 @@ const Div = styled.div<DivProps>`
   }}
 `
 
+export type ButtonItem<V extends Key> = {
+  label?: string
+  value: V
+  props: Partial<ButtonProps>
+}
+
 export type ButtonBlockProps<V extends Key> = {
   disabled?: boolean
 
   onClick?: (value: V) => void
-  values: readonly V[]
+  items: readonly ButtonItem<V>[] | readonly V[]
 } & DivProps
 
 export const ButtonBlock = <V extends Key>({
   disabled,
-  values,
+  items: itemsProp,
   onClick,
   ...divProps
 }: ButtonBlockProps<V>) => {
+  let items: ButtonItem<V>[]
+  if (itemsProp.length > 0 && typeof itemsProp[0] === 'object') {
+    items = itemsProp as ButtonItem<V>[]
+  } else {
+    items = (itemsProp as V[]).map(value => ({
+      value,
+      props: {},
+    }))
+  }
+
   return (
     <Div {...divProps}>
-      {values.map(v => (
-        <Button
-          key={v}
-          disabled={disabled}
-          onClick={onClick ? () => onClick(v) : undefined}
-        >
-          {v.toString()}
-        </Button>
-      ))}
+      {items.map(({ value, label, props }) => {
+        return (
+          <Button
+            {...props}
+            key={value}
+            disabled={disabled}
+            onClick={onClick ? () => onClick(value) : undefined}
+          >
+            {label ?? value.toString()}
+          </Button>
+        )
+      })}
     </Div>
   )
 }

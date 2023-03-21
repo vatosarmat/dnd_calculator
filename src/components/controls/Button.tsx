@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 export type ButtonProps = {
   $full?: boolean
-  $primary?: boolean
+  $color?: 'default' | 'primary' | 'secondary'
 
   disabled?: boolean
   onClick?: MouseEventHandler
@@ -20,21 +20,28 @@ const StyledButton = styled.button<ButtonProps>`
     `}
 
   border-style: solid;
-  border-color: ${({ theme }) => theme.palette.gray.buttonBorder};
-  border-radius: ${({ theme }) => theme.decoration.buttonBorderRadius}px;
 
-  ${({ $primary, theme: { palette } }) =>
-    $primary
-      ? css`
-          border-width: 0px;
-          color: ${palette.gray.white};
-          background-color: ${palette.primary};
-        `
-      : css`
-          border-width: 1px;
-          color: ${palette.gray.black};
-          background-color: ${palette.gray.white};
-        `}
+  ${({ $color = 'default', theme }) => {
+    const { palette, decoration } = theme
+
+    return [
+      css`
+        border-color: ${palette.gray.buttonBorder};
+        border-radius: ${decoration.buttonBorderRadius}px;
+      `,
+      $color === 'default'
+        ? css`
+            border-width: 1px;
+            color: ${palette.gray.black};
+            background-color: ${palette.gray.white};
+          `
+        : css`
+            border-width: 0px;
+            color: ${palette.gray.white};
+            background-color: ${palette[$color]};
+          `,
+    ]
+  }}
 
   &:disabled {
     pointer-events: none;

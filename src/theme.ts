@@ -10,7 +10,7 @@ const theme: DefaultTheme = {
       height: {
         operations: 56,
         digits: 224,
-        equal: 72,
+        controls: 56,
         display: 60,
       },
     },
@@ -22,6 +22,7 @@ const theme: DefaultTheme = {
   },
   palette: {
     primary: '#5d5fef',
+    secondary: '#ef5d9c',
     sky: '#f0f9ff',
     gray: {
       black: '#000000',
