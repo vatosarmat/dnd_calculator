@@ -5,6 +5,11 @@ import 'styled-components'
 declare module 'styled-components' {
   export interface DefaultTheme {
     spacing(n?: number): number
+    font: {
+      p: { size: number; weight: number }
+      button: { size: number; weight: number }
+      display: { size: number; weight: number }
+    }
     layout: {
       block: {
         width: number

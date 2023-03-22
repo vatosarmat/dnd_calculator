@@ -28,29 +28,33 @@ const Button = styled.button<ButtonProps>`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-
   width: 100%;
-
   border-style: solid;
   border-width: 1px;
 
-  ${({ theme, $checked }) =>
-    css`
+  ${({ theme, $checked }) => {
+    const { decoration, palette, font } = theme
+
+    return css`
       gap: ${theme.spacing()}px;
       padding: ${theme.spacing()}px ${theme.spacing(1.5)}px;
+      border-radius: ${decoration.buttonBorderRadius - 1}px;
 
-      border-radius: ${theme.decoration.buttonBorderRadius - 1}px;
+      color: ${palette.gray.black};
+      font-size: ${font.p.size}px;
+      font-weight: ${font.p.weight}px;
 
       ${$checked
         ? css`
-            border-color: ${theme.palette.gray.buttonBorder};
-            background-color: ${theme.palette.gray.white};
+            border-color: ${palette.gray.buttonBorder};
+            background-color: ${palette.gray.white};
           `
         : css`
             border-color: transparent;
             background-color: transparent;
           `}
-    `}
+    `
+  }}
 `
 
 type Item<V> = {

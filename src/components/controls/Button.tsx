@@ -22,12 +22,14 @@ const StyledButton = styled.button<ButtonProps>`
   border-style: solid;
 
   ${({ $color = 'default', theme }) => {
-    const { palette, decoration } = theme
+    const { palette, decoration, font } = theme
 
     return [
       css`
         border-color: ${palette.gray.buttonBorder};
         border-radius: ${decoration.buttonBorderRadius}px;
+        font-size: ${font.button.size}px;
+        font-weight: ${font.button.weight};
       `,
       $color === 'default'
         ? css`
