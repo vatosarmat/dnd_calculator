@@ -19,6 +19,8 @@ module.exports = {
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
 
+    'prefer-const': 'warn',
+
     '@typescript-eslint/ban-types': [
       'warn',
       {
