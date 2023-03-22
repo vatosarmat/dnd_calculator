@@ -12,7 +12,7 @@ export const calculatorDigitValues = [
 ] as const
 export type CalculatorDigit = typeof calculatorDigitValues[number]
 
-export const calculatorDigitExtValues = [...calculatorDigitValues, ',', '∓'] as const
+export const calculatorDigitExtValues = [...calculatorDigitValues, '.', '∓'] as const
 export type CalculatorDigitExt = typeof calculatorDigitExtValues[number]
 
 export const calculatorOperationValues = ['/', 'x', '-', '+'] as const

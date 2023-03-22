@@ -6,12 +6,19 @@ import { StateContext as CanvasState } from 'state/canvas'
 import * as input from 'state/calculator/input'
 import type { State as InputState, Action as InputAction } from 'state/calculator/input'
 import * as calc from 'state/calculator/core'
-import type { State as CalcState, Action as CalcAction } from 'state/calculator/core'
-import type { CalculatorDigitExt, CalculatorControl } from 'state/calculator/model'
+import type { State as CalcState } from 'state/calculator/core'
+import type {
+  CalculatorDigitExt,
+  CalculatorControl,
+  CalculatorOperation,
+} from 'state/calculator/model'
 
-const displayString = (state: InputState): string => {
-  const a = input.stringValue(state).toString()
-  return a
+const displayString = (calcState: CalcState, inputState: InputState): string => {
+  if (calcState.mode === 'input') {
+    return input.stringValue(inputState).toString()
+  }
+
+  return calcState.result!.toString()
 }
 
 const Calculator: FC = () => {
@@ -20,8 +27,13 @@ const Calculator: FC = () => {
   const [calcState, calcDispatch] = useReducer(calc.reducer, calc.initialState)
 
   const onDigitButton = (digit: CalculatorDigitExt) => {
+    if (calcState.mode === 'output') {
+      inputDispatch({ type: 'reset' })
+      calcDispatch({ type: 'input' })
+    }
+
     let action: InputAction
-    if (digit === ',') {
+    if (digit === '.') {
       action = { type: 'decimal_separator' }
     } else if (digit === '∓') {
       action = { type: 'sign' }
@@ -37,8 +49,15 @@ const Calculator: FC = () => {
       inputDispatch(reset)
       calcDispatch(reset)
     } else {
-      //control === '='
+      calcDispatch({ type: 'equal', payload: { input: input.numberValue(inputState) } })
     }
+  }
+
+  const onOperationButton = (operation: CalculatorOperation) => {
+    calcDispatch({
+      type: 'operation',
+      payload: { operation, input: input.numberValue(inputState) },
+    })
   }
 
   return (
@@ -47,11 +66,11 @@ const Calculator: FC = () => {
         let blockChildren
         switch (block) {
           case 'display': {
-            blockChildren = <Display>{displayString(inputState)}</Display>
+            blockChildren = <Display>{displayString(calcState, inputState)}</Display>
             break
           }
           case 'operations': {
-            blockChildren = <Buttons.Operations />
+            blockChildren = <Buttons.Operations onClick={onOperationButton} />
             break
           }
           case 'digits': {
