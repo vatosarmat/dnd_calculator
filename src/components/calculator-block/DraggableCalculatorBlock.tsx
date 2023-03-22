@@ -1,7 +1,8 @@
-import { useEffect, FC } from 'react'
+import { useEffect, FC, useContext } from 'react'
 import { useDrag } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 
+import { DispatchContext } from 'state/canvas'
 import { CalculatorBlock, CalculatorBlockProps } from './CalculatorBlock'
 import { DRAG_TYPE, DragItem } from './helpers'
 
@@ -13,6 +14,8 @@ export const DraggableCalculatorBlock: FC<DraggableCalculatorBlockProps> = ({
   type = DRAG_TYPE,
   ...rest
 }) => {
+  const dispatch = useContext(DispatchContext)
+
   const [{ isDragging }, dragSource, dragPreview] = useDrag<
     DragItem,
     unknown,
@@ -25,6 +28,11 @@ export const DraggableCalculatorBlock: FC<DraggableCalculatorBlockProps> = ({
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
+    end: (item, monitor) => {
+      if (!monitor.didDrop()) {
+        dispatch({ type: 'return', payload: { blockName: item.calculatorBlockName } })
+      }
+    },
   }))
 
   //clear browser default preview
