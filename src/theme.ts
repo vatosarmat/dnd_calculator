@@ -27,7 +27,10 @@ const theme: DefaultTheme = {
   },
   palette: {
     primary: '#5d5fef',
+    primaryHover: '#eff0ff',
+    primaryHover2: '#7f81ff',
     secondary: '#ef5d9c',
+    secondaryHover2: '#ff7fb7',
     sky: '#f0f9ff',
     gray: {
       black: '#303030',

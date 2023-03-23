@@ -21,6 +21,10 @@ const StyledButton = styled.button<ButtonProps>`
 
   border-style: solid;
 
+  &:active {
+    transform: scale(0.98);
+  }
+
   ${({ $color = 'default', theme }) => {
     const { palette, decoration, font } = theme
 
@@ -36,11 +40,19 @@ const StyledButton = styled.button<ButtonProps>`
             border-width: 1px;
             color: ${palette.gray.black};
             background-color: ${palette.gray.white};
+
+            &:hover {
+              background-color: ${palette.primaryHover};
+            }
           `
         : css`
             border-width: 0px;
             color: ${palette.gray.white};
             background-color: ${palette[$color]};
+
+            &:hover {
+              background-color: ${palette[`${$color}Hover2`]};
+            }
           `,
     ]
   }}

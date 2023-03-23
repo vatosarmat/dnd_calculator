@@ -27,7 +27,10 @@ declare module 'styled-components' {
     }
     palette: {
       primary: string
+      primaryHover: string
+      primaryHover2: sting
       secondary: string
+      secondaryHover2: sting
       sky: string
       gray: {
         black: string

@@ -35,6 +35,10 @@ const Button = styled.button<ButtonProps>`
     cursor: not-allowed;
   }
 
+  &:active {
+    transform: scale(0.98);
+  }
+
   ${({ theme, $checked }) => {
     const { decoration, palette, font } = theme
 
@@ -55,6 +59,10 @@ const Button = styled.button<ButtonProps>`
         : css`
             border-color: transparent;
             background-color: transparent;
+
+            &:hover {
+              background-color: ${palette.primaryHover};
+            }
           `}
     `
   }}
