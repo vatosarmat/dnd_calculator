@@ -23,9 +23,9 @@ const Grid = styled.div<GridProps>`
   display: grid;
   justify-content: center;
 
-  & > *:nth-child(1) {
-    grid-column-start: 2;
-  }
+  /* & > *:nth-child(1) { */
+  /*   grid-column-start: 2; */
+  /* } */
 
   ${({ theme, $hideChildren }) => {
     const { palette } = theme
@@ -46,6 +46,18 @@ const Grid = styled.div<GridProps>`
       )}
     `
   }}
+`
+
+const Typography = styled.p`
+  text-align: center;
+
+  ${({ theme }) =>
+    css`
+      font-size: ${theme.font.hint.size}px;
+      font-weight: ${theme.font.hint.weight};
+      width: ${theme.layout.block.width}px;
+      padding-top: ${theme.spacing()}px;
+    `}
 `
 
 const appModeValues = ['constructor', 'runtime'] as const
@@ -75,14 +87,24 @@ const Ui = () => {
     />
   )
 
+  const hint = (
+    <Typography>
+      {state.canvasContent.length === 0
+        ? 'You can drag blocks from the palette to the canvas'
+        : 'Double click element on canvas to return it back to the palette'}
+    </Typography>
+  )
+
   return appMode === 'constructor' ? (
     <Grid>
+      {hint}
       {toggleButton}
       <Palette />
       <Canvas />
     </Grid>
   ) : (
-    <Grid $hideChildren={2}>
+    <Grid $hideChildren={[1, 3]}>
+      {hint}
       {toggleButton}
       <Palette />
       <Calculator />

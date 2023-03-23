@@ -1,5 +1,5 @@
 {
-  "name": "elastic_calculator",
+  "name": "dnd_calculator",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

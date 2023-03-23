@@ -5,6 +5,7 @@ const theme: DefaultTheme = {
     return this.layout.spacing * n
   },
   font: {
+    hint: { size: 13, weight: 400 },
     p: { size: 14, weight: 500 },
     button: { size: 18, weight: 500 },
     display: { size: 20, weight: 800 },

@@ -6,6 +6,7 @@ declare module 'styled-components' {
   export interface DefaultTheme {
     spacing(n?: number): number
     font: {
+      hint: { size: number; weight: number }
       p: { size: number; weight: number }
       button: { size: number; weight: number }
       display: { size: number; weight: number }

@@ -49,7 +49,7 @@ const Button = styled.button<ButtonProps>`
 
       color: ${palette.gray.black};
       font-size: ${font.p.size}px;
-      font-weight: ${font.p.weight}px;
+      font-weight: ${font.p.weight};
 
       ${$checked
         ? css`
@@ -60,7 +60,7 @@ const Button = styled.button<ButtonProps>`
             border-color: transparent;
             background-color: transparent;
 
-            &:hover {
+            &:hover:not(:disabled) {
               background-color: ${palette.primaryHover};
             }
           `}
