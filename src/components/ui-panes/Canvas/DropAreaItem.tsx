@@ -19,13 +19,16 @@ const Div = styled.div<DivProps>`
     `}
 `
 
+type HoverHalf = 'upper' | 'lover'
+
 type DropAreaItemProps = PropsWithChildren<{
-  correctHrPos?: (item: DragItem, pos: 'above' | 'below') => HrProps['$pos']
-  onDrop: (item: DragItem, pos: 'above' | 'below') => void
+  getHrPos?: (item: DragItem, hoverHalf: HoverHalf) => HrProps['$pos']
+  onDrop: (item: DragItem, hoverHalf: HoverHalf) => void
 }>
 
-const DropAreaItem: FC<DropAreaItemProps> = ({ children, onDrop, correctHrPos }) => {
+const DropAreaItem: FC<DropAreaItemProps> = ({ children, onDrop, getHrPos }) => {
   const dropAreaElementRef = useRef<HTMLDivElement | null>(null)
+  const hoverHalf = useRef<HoverHalf>('upper')
   const [hrPos, setHrPos] = useState<HrProps['$pos']>('none')
   const [{ isOver }, drop] = useDrop<
     DragItem,
@@ -50,18 +53,14 @@ const DropAreaItem: FC<DropAreaItemProps> = ({ children, onDrop, correctHrPos })
       const draggedItemInDropAreaPos =
         draggedItemInViewportPos.y - dropAreaBoundingRect.top
 
-      let hrPos: HrProps['$pos'] =
-        draggedItemInDropAreaPos >= dropAreaMiddleY ? 'below' : 'above'
-
-      if (correctHrPos) {
-        hrPos = correctHrPos(draggedItem, hrPos)
+      hoverHalf.current = draggedItemInDropAreaPos >= dropAreaMiddleY ? 'lover' : 'upper'
+      if (getHrPos) {
+        setHrPos(getHrPos(draggedItem, hoverHalf.current))
       }
-
-      setHrPos(hrPos)
     },
     drop(item, _monitor) {
       //actually it should never be 'none'
-      onDrop(item, hrPos === 'none' ? 'below' : hrPos)
+      onDrop(item, hoverHalf.current)
     },
   })
 

@@ -34,43 +34,85 @@ const Canvas: React.FC = () => {
     dispatch({ type: 'return', payload: { blockName } })
   }
 
-  const onDrop = (index?: number) => (item: DragItem, pos: 'above' | 'below') => {
-    const to = typeof index === 'number' ? index + (pos === 'above' ? 0 : 1) : undefined
+  const onDropOnItem =
+    (index: number) => (item: DragItem, hoverHalf: 'upper' | 'lover') => {
+      const blockName = item.calculatorBlockName
+      const from = canvasContent.indexOf(blockName)
+
+      if (from === index) {
+        return
+      }
+
+      let to: number
+      if (from === -1 || from > index) {
+        to = index + (hoverHalf === 'upper' ? 0 : 1)
+      } else {
+        to = index + (hoverHalf === 'upper' ? -1 : 0)
+      }
+
+      let action: Action
+      if (from === -1) {
+        action = {
+          type: 'drop',
+          payload: { blockName, to },
+        }
+      } else {
+        action = {
+          type: 'move',
+          payload: { from, to },
+        }
+      }
+      dispatch(action)
+    }
+
+  const onDropOnFiller = (item: DragItem) => {
     const blockName = item.calculatorBlockName
-    const blockPos = canvasContent.indexOf(blockName)
+    const from = canvasContent.indexOf(blockName)
 
     let action: Action
-    if (blockPos === -1 || to === undefined) {
+    if (from === -1) {
       action = {
         type: 'drop',
-        payload: { blockName, to },
+        payload: { blockName },
       }
     } else {
       action = {
         type: 'move',
-        payload: { from: blockPos, to },
+        payload: { from: from },
       }
     }
     dispatch(action)
   }
 
-  const correctHrPos = (index: number) => (item: DragItem, pos: 'above' | 'below') => {
-    const notEmpty = canvasContent.length > 0
-    const overItself = canvasContent[index] === item.calculatorBlockName
-    const belowItself =
-      index >= 1 &&
-      canvasContent[index - 1] === item.calculatorBlockName &&
-      pos === 'above'
-    const aboveItself =
-      index < canvasContent.length - 1 &&
-      canvasContent[index + 1] === item.calculatorBlockName &&
-      pos === 'below'
+  const getHrPosItem =
+    (index: number) => (item: DragItem, hoverHalf: 'upper' | 'lover') => {
+      const notEmpty = canvasContent.length > 0
+      const overItself = canvasContent[index] === item.calculatorBlockName
+      const belowItself =
+        index >= 1 &&
+        canvasContent[index - 1] === item.calculatorBlockName &&
+        hoverHalf === 'upper'
+      const aboveItself =
+        index < canvasContent.length - 1 &&
+        canvasContent[index + 1] === item.calculatorBlockName &&
+        hoverHalf === 'lover'
 
-    if (notEmpty && (overItself || belowItself || aboveItself)) {
+      if (notEmpty && (overItself || belowItself || aboveItself)) {
+        return 'none'
+      }
+
+      return hoverHalf === 'upper' ? 'above' : 'below'
+    }
+
+  const getHrPosFiller = (item: DragItem, _hoverHalf: 'upper' | 'lover') => {
+    if (
+      canvasContent.length === 0 ||
+      canvasContent[canvasContent.length - 1] === item.calculatorBlockName
+    ) {
       return 'none'
     }
 
-    return pos
+    return 'above'
   }
 
   return (
@@ -79,8 +121,8 @@ const Canvas: React.FC = () => {
         return (
           <DropAreaItem
             key={blockName}
-            correctHrPos={correctHrPos(index)}
-            onDrop={onDrop(index)}
+            getHrPos={getHrPosItem(index)}
+            onDrop={onDropOnItem(index)}
           >
             <DraggableCalculatorBlock
               key={blockName}
@@ -92,10 +134,7 @@ const Canvas: React.FC = () => {
         )
       })}
       {canvasContent.length < calculatorBlockNameValues.length && (
-        <DropAreaItem
-          correctHrPos={() => (canvasContent.length === 0 ? 'none' : 'above')}
-          onDrop={onDrop()}
-        />
+        <DropAreaItem getHrPos={getHrPosFiller} onDrop={onDropOnFiller} />
       )}
     </Shape>
   )

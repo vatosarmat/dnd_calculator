@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { CalculatorBlock, DragItem, DRAG_TYPE } from 'components/calculator-block'
 
-const StyledBlock = styled.div`
+const Layer = styled.div`
   position: fixed;
   pointer-events: none;
   z-index: 200;
@@ -34,7 +34,7 @@ const PreviewLayer: FC = () => {
     : { display: 'none' }
 
   return (
-    <StyledBlock>
+    <Layer>
       <div style={style}>
         <CalculatorBlock
           disabled
@@ -43,7 +43,7 @@ const PreviewLayer: FC = () => {
           content={item.calculatorBlockName}
         />
       </div>
-    </StyledBlock>
+    </Layer>
   )
 }
 

@@ -1,4 +1,4 @@
-import { forwardRef, PropsWithChildren } from 'react'
+import { forwardRef, PropsWithChildren, CSSProperties } from 'react'
 import styled, { css } from 'styled-components'
 
 import Buttons from './blocks/Buttons'
@@ -15,22 +15,33 @@ type DivProps = {
   content: CalculatorBlockName
   shadow?: boolean
   transparency?: keyof typeof TRANSPARENCY_TABLE
+  cursor?: CSSProperties['cursor']
 }
 
 const Div = styled.div<StyledTransient<DivProps>>`
-  width: ${({ theme: { layout } }) => layout.block.width}px;
-  height: ${({ $content, theme: { layout } }) => layout.block.height[$content]}px;
-  padding: ${({ theme }) => theme.spacing(0.5)}px;
   border-radius: 4px;
-  opacity: ${({ $transparency }) =>
-    $transparency ? TRANSPARENCY_TABLE[$transparency] : 1};
 
-  ${({ $shadow, theme: { palette } }) =>
-    $shadow &&
-    css`
-      background-color: ${palette.gray.white};
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
-    `}
+  ${({ $shadow, $content, $transparency, $cursor = 'default', theme }) => {
+    const { palette, layout } = theme
+    const rules = [
+      css`
+        width: ${layout.block.width}px;
+        height: ${layout.block.height[$content]}px;
+        padding: ${theme.spacing(0.5)}px;
+        opacity: ${$transparency ? TRANSPARENCY_TABLE[$transparency] : 1};
+        cursor: ${$cursor};
+      `,
+    ]
+    if ($shadow) {
+      rules.push(
+        css`
+          background-color: ${palette.gray.white};
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
+        `
+      )
+    }
+    return rules
+  }}
 `
 
 export type CalculatorBlockProps = DivProps & {
@@ -48,6 +59,7 @@ export const CalculatorBlock = forwardRef<
       disabled,
       shadow,
       transparency,
+      cursor,
 
       content,
       children: childrenProp,
@@ -84,6 +96,7 @@ export const CalculatorBlock = forwardRef<
           shadow,
           content,
           transparency,
+          cursor,
         })}
         ref={ref}
         onDoubleClick={onDoubleClick ? () => onDoubleClick(content) : undefined}

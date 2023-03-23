@@ -19,7 +19,7 @@ export type Action =
       type: 'move'
       payload: {
         from: number
-        to: number
+        to?: number
       }
     }
 
@@ -42,7 +42,7 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
     }
 
     case 'move': {
-      const { from, to } = payload
+      const { from, to = state.canvasContent.length } = payload
       if (from === to) {
         return state
       }
@@ -52,9 +52,9 @@ export const reducer: Reducer<State, Action> = (state, { type, payload }) => {
       if (from < to) {
         newCanvasContent = [
           ...canvasContent.slice(0, from),
-          ...canvasContent.slice(from + 1, to),
+          ...canvasContent.slice(from + 1, to + 1),
           canvasContent[from],
-          ...canvasContent.slice(to),
+          ...canvasContent.slice(to + 1),
         ]
       } else {
         //to < from

@@ -14,8 +14,6 @@ const Div = styled.div<DivProps>`
 
   border-radius: ${({ theme: { decoration } }) => decoration.buttonBorderRadius}px;
   background-color: ${({ theme: { palette } }) => palette.gray.displayBg};
-
-  opacity: ${({ $disabled }) => ($disabled ? 0.9 : 1)};
 `
 
 type ButtonProps = {
@@ -31,6 +29,11 @@ const Button = styled.button<ButtonProps>`
   width: 100%;
   border-style: solid;
   border-width: 1px;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
   ${({ theme, $checked }) => {
     const { decoration, palette, font } = theme

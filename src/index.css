@@ -12,6 +12,7 @@ button {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   padding: 0;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 div {

@@ -46,5 +46,5 @@ export const DraggableCalculatorBlock: FC<DraggableCalculatorBlockProps> = ({
     rest.transparency = 'high'
   }
 
-  return <CalculatorBlock {...rest} ref={dragSource} />
+  return <CalculatorBlock {...rest} cursor={'grab'} ref={dragSource} />
 }
